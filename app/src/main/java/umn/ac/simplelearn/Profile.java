@@ -59,7 +59,7 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
 
         drawerLayout2 = findViewById(R.id.drawerLayout2);
         navigationView = findViewById(R.id.navigationView);
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.profileToolbar);
 
         fullName = findViewById(R.id.fullNameProfile);
         email = findViewById(R.id.emailProfile);
