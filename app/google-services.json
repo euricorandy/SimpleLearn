@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "487441865636",
+    "project_id": "simplelearn-5c94c",
+    "storage_bucket": "simplelearn-5c94c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:487441865636:android:5b140399c6c04be42fbf31",
+        "android_client_info": {
+          "package_name": "umn.ac.simplelearn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "487441865636-a1hmcdtsh4ps4feo5jem9h9381tm666b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1g6KrW0IeK31z8KkH1xki5h8OFcMJ-YA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "487441865636-a1hmcdtsh4ps4feo5jem9h9381tm666b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
