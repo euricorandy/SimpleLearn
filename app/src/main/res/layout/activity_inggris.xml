@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/indonesiaDL"
+    android:id="@+id/inggrisDL"
     android:background="@color/white"
-    tools:context=".Indonesia"
+    tools:context=".Inggris"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
@@ -25,7 +25,7 @@
         android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/indoToolbar"
+            android:id="@+id/ingToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/orange"
@@ -36,42 +36,15 @@
             tools:ignore="MissingConstraints" />
 
         <RelativeLayout
-            android:id="@+id/indonesiaRL"
+            android:id="@+id/inggrisRL"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <Button
-                android:id="@+id/btnAddIndo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Content"
-                android:layout_centerHorizontal="true" />
+            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/btnAddIndo"
-                android:id="@+id/indoRecyclerView" />
-
-            <TextView
-                android:id="@+id/uploadText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Uploaded File"
-                android:layout_below="@+id/indoRecyclerView"
-                android:layout_marginTop="20dp"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="20sp" />
-
-            <ListView
-                android:id="@+id/indoListView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:layout_below="@+id/uploadText" />
-
+                android:layout_height="match_parent"
+                android:id="@+id/ingRecyclerView"
+                android:layout_marginBottom="7dp"/>
 
         </RelativeLayout>
 

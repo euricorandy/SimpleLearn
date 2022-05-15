@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +27,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     NavigationView navigationView;
     Toolbar toolbar;
 
-    ImageView indoMenu;
+    ImageView indoMenu, ingMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         toolbar = findViewById(R.id.toolbar);
 
         indoMenu = findViewById(R.id.bhsIndo);
+        ingMenu = findViewById(R.id.bhsIng);
 
         // toolbar
         setSupportActionBar(toolbar);
@@ -49,11 +51,37 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         if(FirebaseAuth.getInstance().getCurrentUser() != null) {
 
             menu.findItem(R.id.login).setVisible(false);
+            indoMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getApplicationContext(),Indonesia.class));
+                }
+            });
+
+            ingMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getApplicationContext(),Inggris.class));
+                }
+            });
 
         } else {
 
             menu.findItem(R.id.logout).setVisible(false);
             menu.findItem(R.id.profile_menu).setVisible(false);
+            indoMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(Dashboard.this, "Please login first.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            ingMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(Dashboard.this, "Please login first.", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
 
@@ -64,13 +92,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         navigationView.setNavigationItemSelectedListener(this);
 
         navigationView.setCheckedItem(R.id.home_menu);
-
-        indoMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),Indonesia.class));
-            }
-        });
     }
 
     @Override

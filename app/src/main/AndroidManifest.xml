@@ -9,16 +9,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SimpleLearn">
-        <activity android:name=".PdfIndo" android:exported="false"/>
-        <activity android:name=".Indonesia" android:exported="false"/>
-        <activity android:name=".EditProfile" android:exported="false"/>
-        <activity android:name=".Dashboard" android:exported="false"/>
-        <activity android:name=".Profile" android:exported="false"/>
-        <activity android:name=".Login" android:exported="false"/>
-        <activity android:name=".Register" android:exported="false"/>
+        <activity android:name=".AddIndo" />
+        <activity
+            android:name=".PdfIng"
+            android:exported="false" />
+        <activity
+            android:name=".Inggris"
+            android:exported="false" />
+        <activity
+            android:name=".PdfIndo"
+            android:exported="false" />
+        <activity
+            android:name=".Indonesia"
+            android:exported="false" />
+        <activity
+            android:name=".EditProfile"
+            android:exported="false" />
+        <activity
+            android:name=".Dashboard"
+            android:exported="false" />
+        <activity
+            android:name=".Profile"
+            android:exported="false" />
+        <activity
+            android:name=".Login"
+            android:exported="false" />
+        <activity
+            android:name=".Register"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +51,8 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>
