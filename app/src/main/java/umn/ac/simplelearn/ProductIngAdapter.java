@@ -2,7 +2,10 @@ package umn.ac.simplelearn;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -38,7 +41,6 @@ public class ProductIngAdapter extends RecyclerView.Adapter<ProductIngViewHolder
         final ProductIng productIng = productIngList.get(position);
 
         holder.textViewTitle.setText(productIng.getTitle());
-        holder.imageView.setImageDrawable(mtx.getResources().getDrawable(productIng.getImage()));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,17 +60,15 @@ public class ProductIngAdapter extends RecyclerView.Adapter<ProductIngViewHolder
     }
 }
 
-class ProductIngViewHolder extends RecyclerView.ViewHolder{
+class ProductIngViewHolder extends RecyclerView.ViewHolder {
 
     CardView cardView;
-    ImageView imageView;
     TextView textViewTitle;
 
     public ProductIngViewHolder(@NonNull View itemView) {
         super(itemView);
 
         cardView = itemView.findViewById(R.id.indoCardView);
-        imageView = itemView.findViewById(R.id.indoImageView);
         textViewTitle = itemView.findViewById(R.id.indoTextViewTitle);
     }
 }

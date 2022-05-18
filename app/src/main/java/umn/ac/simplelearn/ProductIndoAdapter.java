@@ -38,7 +38,6 @@ public class ProductIndoAdapter extends RecyclerView.Adapter<ProductViewHolder>{
         final ProductIndo productIndo = productIndoList.get(position);
 
         holder.textViewTitle.setText(productIndo.getTitle());
-        holder.imageView.setImageDrawable(mtx.getResources().getDrawable(productIndo.getImage()));
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,14 +60,12 @@ public class ProductIndoAdapter extends RecyclerView.Adapter<ProductViewHolder>{
 class ProductViewHolder extends RecyclerView.ViewHolder{
 
     CardView cardView;
-    ImageView imageView;
     TextView textViewTitle;
 
     public ProductViewHolder(@NonNull View itemView) {
         super(itemView);
 
         cardView = itemView.findViewById(R.id.indoCardView);
-        imageView = itemView.findViewById(R.id.indoImageView);
         textViewTitle = itemView.findViewById(R.id.indoTextViewTitle);
     }
 }

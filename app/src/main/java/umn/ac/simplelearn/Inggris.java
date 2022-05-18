@@ -13,13 +13,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.protobuf.Internal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +36,14 @@ import java.util.List;
 public class Inggris extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     RecyclerView recyclerView;
+    DatabaseReference databaseReference;
     List<ProductIng> productInggrisList;
 
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
+
+    Button addIng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +51,7 @@ public class Inggris extends AppCompatActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_inggris);
 
         recyclerView = (RecyclerView) findViewById(R.id.ingRecyclerView);
+        addIng = (Button) findViewById(R.id.btnAddIng);
 
         toolbar = findViewById(R.id.ingToolbar);
         drawerLayout = findViewById(R.id.inggrisDL);
@@ -64,29 +77,40 @@ public class Inggris extends AppCompatActivity implements NavigationView.OnNavig
         navigationView.setNavigationItemSelectedListener(this);
 
         productInggrisList = new ArrayList<>();
+        databaseReference = FirebaseDatabase.getInstance().getReference("materiInggris");
 
-        productInggrisList.add(new ProductIng(1,
-                "Pronouns, Contractions, and Prepositions", R.drawable.ic_materi,
+        productInggrisList.add(new ProductIng("Pronouns, Contractions, and Prepositions",
                 "https://firebasestorage.googleapis.com/v0/b/simplelearn-5c94c.appspot.com/o/materiInggris%2FWeek%202-Non%20PPT-%20Pronouns%2C%20Contractions%20and%20Prepositions.pdf?alt=media&token=bc4ad4cd-4919-45fa-8cfa-6221533b64cc"));
 
-        productInggrisList.add(new ProductIng(2,
-                "Tenses Overview", R.drawable.ic_materi,
+        productInggrisList.add(new ProductIng("Tenses Overview",
                 "https://firebasestorage.googleapis.com/v0/b/simplelearn-5c94c.appspot.com/o/materiInggris%2FWeek%203-Non%20PPT-12%20tenses-Overview.pdf?alt=media&token=fcfe2bec-a70d-4475-ab3c-a06f599eb904"));
 
-        productInggrisList.add(new ProductIng(3,
-                "The Passive", R.drawable.ic_materi,
+        productInggrisList.add(new ProductIng("The Passive",
                 "https://firebasestorage.googleapis.com/v0/b/simplelearn-5c94c.appspot.com/o/materiInggris%2FWeek%204-Non%20PPT-The%20Passive.pdf?alt=media&token=03a3fa01-a126-4875-8bb6-f2f82fa156a9"));
 
-        productInggrisList.add(new ProductIng(4,
-                "Noun Clauses", R.drawable.ic_materi,
+        productInggrisList.add(new ProductIng("Noun Clauses",
                 "https://firebasestorage.googleapis.com/v0/b/simplelearn-5c94c.appspot.com/o/materiInggris%2FWeek%205-Non%20PPT-Noun%20Clauses.pdf?alt=media&token=9b1104ca-8186-488f-b373-4e80f0cd5764"));
 
-        productInggrisList.add(new ProductIng(5,
-                "Subject-Verb Agreement", R.drawable.ic_materi,
+        productInggrisList.add(new ProductIng("Subject-Verb Agreement",
                 "https://firebasestorage.googleapis.com/v0/b/simplelearn-5c94c.appspot.com/o/materiInggris%2FWeek%2014-PPT-S-V%20Agreement.pdf?alt=media&token=3eb36e97-bf22-4343-945c-8f4366458bbf"));
 
-        ProductIngAdapter adapter = new ProductIngAdapter(this,productInggrisList);
-        recyclerView.setAdapter(adapter);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    ProductIng productIng = postSnapshot.getValue(ProductIng.class);
+                    productInggrisList.add(productIng);
+                }
+
+                ProductIngAdapter adapter = new ProductIngAdapter(Inggris.this, productInggrisList);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(Inggris.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -94,6 +118,14 @@ public class Inggris extends AppCompatActivity implements NavigationView.OnNavig
         Animation animation = AnimationUtils.loadAnimation(this,R.anim.anim_about_card_show);
         RelativeLayout relativeLayout = findViewById(R.id.inggrisRL);
         recyclerView.setAnimation(animation);
+
+        addIng.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentAdd = new Intent(Inggris.this, AddIng.class);
+                startActivity(intentAdd);
+            }
+        });
     }
 
     @Override

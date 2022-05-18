@@ -26,11 +26,11 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
-public class AddIndo extends AppCompatActivity {
+public class AddIng extends AppCompatActivity {
 
     private EditText editPDFName;
-    private Button chooseIndo;
-    private Button uploadIndo;
+    private Button chooseIng;
+    private Button uploadIng;
     private ProgressBar mProgressBar;
 
     private Uri mPDFUri;
@@ -43,28 +43,28 @@ public class AddIndo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_indo);
+        setContentView(R.layout.activity_add_ing);
 
-        editPDFName = (EditText) findViewById(R.id.addIndoET);
-        chooseIndo = (Button) findViewById(R.id.chooseIndo);
-        uploadIndo = (Button) findViewById(R.id.uploadIndo);
-        mProgressBar = findViewById(R.id.progressBar4);
+        editPDFName = (EditText) findViewById(R.id.addIngET);
+        chooseIng = (Button) findViewById(R.id.chooseIng);
+        uploadIng = (Button) findViewById(R.id.uploadIng);
+        mProgressBar = findViewById(R.id.progressBar3);
 
-        storageReference = FirebaseStorage.getInstance().getReference("materiInterpersonal");
-        databaseReference = FirebaseDatabase.getInstance().getReference("materiInterpersonal");
+        storageReference = FirebaseStorage.getInstance().getReference("materiInggris");
+        databaseReference = FirebaseDatabase.getInstance().getReference("materiInggris");
 
-        chooseIndo.setOnClickListener(new View.OnClickListener() {
+        chooseIng.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectPDF();
             }
         });
 
-        uploadIndo.setOnClickListener(new View.OnClickListener() {
+        uploadIng.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mUploadTask != null && mUploadTask.isInProgress()) {
-                    Toast.makeText(AddIndo.this, "Upload is in progress", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddIng.this, "Upload is in progress", Toast.LENGTH_SHORT).show();
                 } else {
                     uploadPDF();
                 }
@@ -112,22 +112,22 @@ public class AddIndo extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
                             Uri url = uriTask.getResult();
 
-                            ProductIndo productIndo = new ProductIndo(editPDFName.getText().toString(),url.toString());
-                            databaseReference.child(databaseReference.push().getKey()).setValue(productIndo);
+                            ProductIng productIng = new ProductIng(editPDFName.getText().toString(),url.toString());
+                            databaseReference.child(databaseReference.push().getKey()).setValue(productIng);
 
-                            Toast.makeText(AddIndo.this, "File uploaded", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddIng.this, "File uploaded", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(AddIndo.this, "File error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddIng.this, "File error", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(AddIndo.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddIng.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override

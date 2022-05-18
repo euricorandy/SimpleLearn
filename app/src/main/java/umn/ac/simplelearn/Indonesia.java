@@ -52,6 +52,7 @@ import java.util.List;
 public class Indonesia extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     RecyclerView recyclerView;
+    DatabaseReference databaseReference;
     List<ProductIndo> productIndoList;
 
     DrawerLayout drawerLayout;
@@ -59,9 +60,6 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
     Toolbar toolbar;
 
     Button addIndo;
-    DatabaseReference databaseReference;
-    ListView putPDFListView;
-    List<putPDF> putPDFS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +68,6 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
 
         recyclerView = (RecyclerView) findViewById(R.id.indoRecyclerView);
         addIndo = (Button) findViewById(R.id.btnAddIndo);
-        putPDFListView = (ListView) findViewById(R.id.indoListView);
 
         toolbar = findViewById(R.id.indoToolbar);
         drawerLayout = findViewById(R.id.indonesiaDL);
@@ -96,30 +93,40 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
         navigationView.setNavigationItemSelectedListener(this);
 
         productIndoList = new ArrayList<>();
-        putPDFS = new ArrayList<>();
+        databaseReference = FirebaseDatabase.getInstance().getReference("materiInterpersonal");
 
-        productIndoList.add(new ProductIndo(1,
-                "Pesan Verbal dan Pesan Non-Verbal", R.drawable.ic_materi,
+        productIndoList.add(new ProductIndo("Pesan Verbal dan Pesan Non-Verbal",
                 "https://firebasestorage.googleapis.com/v0/b/simplelearn-5c94c.appspot.com/o/materiInterpersonal%2FKAP%202021%20TI%208%20-%20Pesan.pdf?alt=media&token=8e895e1f-368d-4225-b081-24f4fa4a2e38"));
 
-        productIndoList.add(new ProductIndo(2,
-                "Tahapan, Teori, dan Hubungan Antarpribadi", R.drawable.ic_materi,
+        productIndoList.add(new ProductIndo("Tahapan, Teori, dan Hubungan Antarpribadi",
                 "https://firebasestorage.googleapis.com/v0/b/simplelearn-5c94c.appspot.com/o/materiInterpersonal%2FKAP%202021%20TI%209%20-%20Interpersonal%20Relationship%20Stages%2C%20Theories%2C%20and%20Communication.pdf?alt=media&token=28cc7645-ee4f-4a65-864d-97301a932802"));
 
-        productIndoList.add(new ProductIndo(3,
-                "Jenis-jenis Hubungan Antarpribadi", R.drawable.ic_materi,
+        productIndoList.add(new ProductIndo("Jenis-jenis Hubungan Antarpribadi",
                 "https://firebasestorage.googleapis.com/v0/b/simplelearn-5c94c.appspot.com/o/materiInterpersonal%2FKAP%202021%20TI%2010%20-%20Types%20of%20Interpersonal%20Relationship.pdf?alt=media&token=6c486a96-1a2d-4916-ad4e-0389769f097b"));
 
-        productIndoList.add(new ProductIndo(4,
-                "Kekuasaan dan Pengaruh Antarpribadi", R.drawable.ic_materi,
+        productIndoList.add(new ProductIndo("Kekuasaan dan Pengaruh Antarpribadi",
                 "https://firebasestorage.googleapis.com/v0/b/simplelearn-5c94c.appspot.com/o/materiInterpersonal%2FKAP%202021%20TI%2012%20-%20Interpersonal%20Power%20and%20Influence.pdf?alt=media&token=ff4d1942-e102-4028-b5c2-b45ab19c7a53"));
 
-        productIndoList.add(new ProductIndo(5,
-                "Wawancara dan CMC", R.drawable.ic_materi,
+        productIndoList.add(new ProductIndo("Wawancara dan CMC",
                 "https://firebasestorage.googleapis.com/v0/b/simplelearn-5c94c.appspot.com/o/materiInterpersonal%2FKAP%202021%20TI%2013%20-%20Wawancara%20dan%20CMC.pdf?alt=media&token=132f2067-be33-46b5-89c9-dbf13f8f0953"));
 
-        ProductIndoAdapter adapter = new ProductIndoAdapter(this,productIndoList);
-        recyclerView.setAdapter(adapter);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    ProductIndo productIndo = postSnapshot.getValue(ProductIndo.class);
+                    productIndoList.add(productIndo);
+                }
+
+                ProductIndoAdapter adapter = new ProductIndoAdapter(Indonesia.this, productIndoList);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(Indonesia.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -128,20 +135,6 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
         RelativeLayout relativeLayout = findViewById(R.id.indonesiaRL);
         recyclerView.setAnimation(animation);
 
-        viewAllFilesUploaded();
-
-        putPDFListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                putPDF putPDF = putPDFS.get(i);
-
-                Intent intent = new Intent();
-                intent.setType(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(putPDF.getUrl()));
-                startActivity(intent);
-            }
-        });
-
         addIndo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,43 +142,6 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
                 startActivity(intentAdd);
             }
         });
-    }
-
-    private void viewAllFilesUploaded() {
-
-        databaseReference = FirebaseDatabase.getInstance().getReference("materiInterpersonal");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot postSnapshot: snapshot.getChildren()){
-                    putPDF putPDF = postSnapshot.getValue(umn.ac.simplelearn.putPDF.class);
-                    putPDFS.add(putPDF);
-                }
-
-                String[] uploads = new String[putPDFS.size()];
-
-                for (int i = 0; i<uploads.length; i++){
-                    uploads[i] = putPDFS.get(i).getName();
-                }
-
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, uploads){
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        View view = super.getView(position, convertView, parent);
-                        TextView indoText = (TextView) view.findViewById(android.R.id.text1);
-                        indoText.setTextColor(Color.BLACK);
-                        return view;
-                    }
-                };
-                putPDFListView.setAdapter(arrayAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(Indonesia.this, "File error", Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     @Override

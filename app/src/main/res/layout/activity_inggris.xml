@@ -40,11 +40,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <Button
+                android:id="@+id/btnAddIng"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Content"
+                android:layout_centerHorizontal="true" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/ingRecyclerView"
-                android:layout_marginBottom="7dp"/>
+                android:layout_below="@+id/btnAddIng" />
 
         </RelativeLayout>
 
