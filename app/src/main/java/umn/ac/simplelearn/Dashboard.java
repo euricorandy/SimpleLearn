@@ -28,7 +28,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     NavigationView navigationView;
     Toolbar toolbar;
 
-    ImageView indoMenu, ingMenu, quizMenu;
+    ImageView indoMenu, ingMenu, quizMenu, spinMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +42,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         indoMenu = findViewById(R.id.bhsIndo);
         ingMenu = findViewById(R.id.bhsIng);
         quizMenu = findViewById(R.id.funQuiz);
+        spinMenu = findViewById(R.id.spinWheel);
 
         // toolbar
         setSupportActionBar(toolbar);
@@ -74,6 +75,13 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 }
             });
 
+            spinMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getApplicationContext(),SpinnerActivity.class));
+                }
+            });
+
         } else {
 
             menu.findItem(R.id.logout).setVisible(false);
@@ -95,6 +103,13 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             });
 
             quizMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(Dashboard.this, "Please login first.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            spinMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(Dashboard.this, "Please login first.", Toast.LENGTH_SHORT).show();
