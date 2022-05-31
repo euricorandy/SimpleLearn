@@ -6,5 +6,8 @@
         <item>@font/nova_square</item>
         <item>@font/original_surfer</item>
         <item>@font/poiret_one</item>
+        <item>@font/roboto</item>
+        <item>@font/roboto_bold</item>
+        <item>@font/roboto_thin</item>
     </array>
 </resources>

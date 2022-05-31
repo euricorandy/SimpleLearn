@@ -71,6 +71,8 @@ public class Register extends AppCompatActivity {
                 String confirmPassword = mConfirmPassword.getText().toString().trim();
                 String fullName = mFullName.getText().toString();
 
+                final User user = new User(email, fullName, password, nim);
+
                 if (TextUtils.isEmpty(email)){
                     mEmail.setError("Email is Required.");
                     return;
@@ -108,41 +110,21 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-
-                            //send verification link
-                            FirebaseUser fuser = fAuth.getCurrentUser();
-                            fuser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(Register.this, "Verification Email has been sent.", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "OnFailure: Email not sent " + e.getMessage());
-                                }
-                            });
-
                             Toast.makeText(Register.this, "User Created.", Toast.LENGTH_SHORT).show();
-                            userID = fAuth.getCurrentUser().getUid();
-                            DocumentReference documentReference = fStore.collection("users").document(userID);
-                            Map<String,Object> user = new HashMap<>();
-                            user.put("namaMahasiswa", fullName);
-                            user.put("email", email);
-                            user.put("nim", nim);
-                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            userID = task.getResult().getUser().getUid();
+                            fStore.collection("users")
+                                    .document(userID)
+                                    .set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, "onSuccess: user profile user profile is created for " + userID);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "onFailure: " + e.toString());
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()) {
+                                        startActivity(new Intent(Register.this, Dashboard.class));
+                                        finish();
+                                    } else {
+                                        Toast.makeText(Register.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
-                            startActivity(new Intent(getApplicationContext(), Dashboard.class));
-                            finish();
                         } else {
                             Toast.makeText(Register.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);

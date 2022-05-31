@@ -4,13 +4,13 @@
     android:layout_height="180dp"
     android:background="@color/orange"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="20dp">
+    android:gravity="center">
 
     <ImageView
         android:layout_width="90dp"
         android:layout_height="90dp"
-        android:src="@drawable/ic_learning_center"/>
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_learning_center" />
 
     <TextView
         android:layout_width="wrap_content"

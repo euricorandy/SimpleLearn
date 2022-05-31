@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/indonesiaDL"
+    android:id="@+id/rankDL"
     android:background="@color/Primary"
-    tools:context=".Indonesia"
+    tools:context=".LeaderboardActivity"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
@@ -25,36 +25,25 @@
         android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/indoToolbar"
+            android:id="@+id/rankToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/orange"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="Interpersonal Communication"
+            app:title="Leaderboards"
             app:titleTextColor="@color/black"
             app:titleMarginStart="0dp"
             tools:ignore="MissingConstraints" />
 
-        <RelativeLayout
-            android:id="@+id/indonesiaRL"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <Button
-                android:id="@+id/btnAddIndo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add Content"
-                android:layout_centerHorizontal="true" />
+            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/btnAddIndo"
-                android:id="@+id/indoRecyclerView" />
-
-        </RelativeLayout>
-
+                tools:listitem="@layout/row_leaderboards"/>
+        </FrameLayout>
     </LinearLayout>
-
 </androidx.drawerlayout.widget.DrawerLayout>

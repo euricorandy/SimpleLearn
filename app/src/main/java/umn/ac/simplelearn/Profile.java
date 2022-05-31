@@ -119,6 +119,8 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
         } else {
 
             menu.findItem(R.id.logout).setVisible(false);
+            menu.findItem(R.id.wallet_menu).setVisible(false);
+            menu.findItem(R.id.rank_menu).setVisible(false);
             menu.findItem(R.id.profile_menu).setVisible(false);
 
         }
@@ -150,6 +152,16 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
                 finish();
 
             case R.id.profile_menu:
+                break;
+
+            case R.id.wallet_menu:
+                Intent intentWallet = new Intent(Profile.this, WalletActivity.class);
+                startActivity(intentWallet);
+                break;
+
+            case R.id.rank_menu:
+                Intent intentRank = new Intent(Profile.this, LeaderboardActivity.class);
+                startActivity(intentRank);
                 break;
 
             case R.id.login:

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,7 +28,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     NavigationView navigationView;
     Toolbar toolbar;
 
-    ImageView indoMenu, ingMenu;
+    ImageView indoMenu, ingMenu, quizMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         indoMenu = findViewById(R.id.bhsIndo);
         ingMenu = findViewById(R.id.bhsIng);
+        quizMenu = findViewById(R.id.funQuiz);
 
         // toolbar
         setSupportActionBar(toolbar);
@@ -65,9 +67,18 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 }
             });
 
+            quizMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getApplicationContext(),MenuQuiz.class));
+                }
+            });
+
         } else {
 
             menu.findItem(R.id.logout).setVisible(false);
+            menu.findItem(R.id.wallet_menu).setVisible(false);
+            menu.findItem(R.id.rank_menu).setVisible(false);
             menu.findItem(R.id.profile_menu).setVisible(false);
             indoMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -77,6 +88,13 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             });
 
             ingMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(Dashboard.this, "Please login first.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            quizMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Toast.makeText(Dashboard.this, "Please login first.", Toast.LENGTH_SHORT).show();
@@ -112,6 +130,16 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
             case R.id.profile_menu:
                 Intent intent = new Intent(Dashboard.this, Profile.class);
                 startActivity(intent);
+                break;
+
+            case R.id.wallet_menu:
+                Intent intentWallet = new Intent(Dashboard.this, WalletActivity.class);
+                startActivity(intentWallet);
+                break;
+
+            case R.id.rank_menu:
+                Intent intentRank = new Intent(Dashboard.this, LeaderboardActivity.class);
+                startActivity(intentRank);
                 break;
 
             case R.id.login:

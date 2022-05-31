@@ -82,6 +82,8 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
         } else {
 
             menu.findItem(R.id.logout).setVisible(false);
+            menu.findItem(R.id.wallet_menu).setVisible(false);
+            menu.findItem(R.id.rank_menu).setVisible(false);
             menu.findItem(R.id.profile_menu).setVisible(false);
 
         }
@@ -165,6 +167,16 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
             case R.id.profile_menu:
                 Intent intentProfile = new Intent(Indonesia.this, Profile.class);
                 startActivity(intentProfile);
+                break;
+
+            case R.id.wallet_menu:
+                Intent intentWallet = new Intent(Indonesia.this, WalletActivity.class);
+                startActivity(intentWallet);
+                break;
+
+            case R.id.rank_menu:
+                Intent intentRank = new Intent(Indonesia.this, LeaderboardActivity.class);
+                startActivity(intentRank);
                 break;
 
             case R.id.login:
