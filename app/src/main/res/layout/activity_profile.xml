@@ -11,13 +11,13 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/navigationView"
-        app:headerLayout="@layout/headerfile"
-        app:menu="@menu/sidemenu"
-        android:layout_gravity="start"/>
+<!--    <com.google.android.material.navigation.NavigationView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:id="@+id/navigationView"-->
+<!--        app:headerLayout="@layout/headerfile"-->
+<!--        app:menu="@menu/sidemenu"-->
+<!--        android:layout_gravity="start"/>-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -156,12 +156,13 @@
                             android:id="@+id/expLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0 / 500"
+                            android:text="1000"
                             android:includeFontPadding="false"
                             android:textSize="20sp"
                             android:fontFamily="@font/original_surfer"
                             android:layout_below="@+id/expImg"
-                            android:layout_centerInParent="true" />
+                            android:layout_centerInParent="true"/>
+
                     </RelativeLayout>
 
                 </androidx.cardview.widget.CardView>

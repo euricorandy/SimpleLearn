@@ -1,6 +1,7 @@
 package umn.ac.simplelearn;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -20,7 +21,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +29,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.protobuf.Internal;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +49,10 @@ public class Inggris extends AppCompatActivity implements NavigationView.OnNavig
     Toolbar toolbar;
 
     Button addIng;
+    String status;
+
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +67,10 @@ public class Inggris extends AppCompatActivity implements NavigationView.OnNavig
         navigationView = findViewById(R.id.navigationView);
         setSupportActionBar(toolbar);
 
+        fAuth = FirebaseAuth.getInstance();
+
         Menu menu = navigationView.getMenu();
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if(fAuth.getCurrentUser() != null) {
 
             menu.findItem(R.id.login).setVisible(false);
 
@@ -70,6 +81,22 @@ public class Inggris extends AppCompatActivity implements NavigationView.OnNavig
             menu.findItem(R.id.rank_menu).setVisible(false);
             menu.findItem(R.id.profile_menu).setVisible(false);
 
+        }
+
+        fStore = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = fStore.collection("users")
+                .document(fAuth.getUid());
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                status = documentSnapshot.getString("profile");
+            }
+        });
+
+        if (status == "admin") {
+            addIng.setVisibility(View.VISIBLE);
+        } else {
+            addIng.setVisibility(View.GONE);
         }
 
         navigationView.bringToFront();
@@ -168,9 +195,9 @@ public class Inggris extends AppCompatActivity implements NavigationView.OnNavig
                 finish();
 
             case R.id.logout:
-                FirebaseAuth.getInstance().signOut(); //logout
+                fAuth.signOut(); //logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
-                finish();
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

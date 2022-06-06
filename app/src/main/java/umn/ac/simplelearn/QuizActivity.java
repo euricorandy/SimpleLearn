@@ -3,7 +3,7 @@ package umn.ac.simplelearn;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.session.MediaSession;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Random;
 
 public class QuizActivity extends AppCompatActivity {
@@ -31,14 +32,18 @@ public class QuizActivity extends AppCompatActivity {
     TextView option2;
     TextView option3;
     TextView option4;
-    Button nextBtn, quizBtn;
-    ImageView fifty, askPeople;
+    Button nextBtn;
+    ImageView fiftyBtn, stopTime;
 
     Question questionObj;
     FirebaseFirestore database;
 
     int index = 0;
     int correctAnswers = 0;
+    boolean counterF = true;
+    boolean counterT = true;
+    int exp = 10;
+    int totalExp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,31 +59,49 @@ public class QuizActivity extends AppCompatActivity {
         option4 = findViewById(R.id.option_4);
 
         nextBtn = findViewById(R.id.nextBtn);
-        quizBtn = findViewById(R.id.quitBtn);
-
-        fifty = findViewById(R.id.imageView4);
-        askPeople = findViewById(R.id.imageView5);
+        fiftyBtn = findViewById(R.id.fifty);
+        stopTime = findViewById(R.id.clock);
 
         questions = new ArrayList<>();
         database = FirebaseFirestore.getInstance();
 
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        String todayString = year + "" + month + "" + day;
+
+        SharedPreferences preferences = getSharedPreferences("PREFS", 0);
+        boolean currentDay = preferences.getBoolean(todayString, false);
+
+        if (!currentDay) {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(todayString, true);
+            editor.apply();
+            counterF = true;
+            counterT = true;
+        } else {
+            counterF = false;
+            counterT = false;
+        }
+
         final String categoryId = getIntent().getStringExtra("categoryId");
         Random random = new Random();
-        final int rand = random.nextInt(10);
+        final int rand = random.nextInt(20);
 
         database.collection("categories")
                 .document(categoryId)
                 .collection("questions")
                 .whereGreaterThanOrEqualTo("index", rand)
-                .orderBy("index").limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .orderBy("index").limit(10).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                if (queryDocumentSnapshots.getDocuments().size() < 5) {
+                if (queryDocumentSnapshots.getDocuments().size() < 10) {
                     database.collection("categories")
                             .document(categoryId)
                             .collection("questions")
                             .whereLessThanOrEqualTo("index", rand)
-                            .orderBy("index").limit(5).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            .orderBy("index").limit(10).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             for (DocumentSnapshot snapshot : queryDocumentSnapshots) {
@@ -98,11 +121,35 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
+        fiftyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (counterF == true) {
+                    fifty_fifty();
+                    counterF = false;
+                } else {
+                    Toast.makeText(QuizActivity.this, "Only can be used once per day", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        stopTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (counterT == true) {
+                    countDownTimer.cancel();
+                    counterT = false;
+                } else {
+                    Toast.makeText(QuizActivity.this, "Only can be used once per day", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         resetTimer();
     }
 
     void resetTimer() {
-        countDownTimer = new CountDownTimer(30000, 1000) {
+        countDownTimer = new CountDownTimer(20000, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -111,7 +158,16 @@ public class QuizActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-
+                reset();
+                if (index < questions.size() - 1) {
+                    index++;
+                    setNextQuestion();
+                } else {
+                    Intent intent = new Intent(QuizActivity.this, ResultActivity.class);
+                    intent.putExtra("correct", correctAnswers);
+                    intent.putExtra("total", questions.size());
+                    startActivity(intent);
+                }
             }
         };
     }
@@ -132,6 +188,7 @@ public class QuizActivity extends AppCompatActivity {
             countDownTimer.cancel();
 
         countDownTimer.start();
+        displayButtons();
         if (index < questions.size()) {
             qCounter.setText(String.format("%d/%d", (index+1), questions.size()));
             questionObj = questions.get(index);
@@ -147,10 +204,13 @@ public class QuizActivity extends AppCompatActivity {
         String selectedAnswer = textView.getText().toString();
         if (selectedAnswer.equals(questionObj.getAnswer())) {
             correctAnswers++;
+            totalExp += exp;
             textView.setBackground(getResources().getDrawable(R.drawable.option_right));
+            Toast.makeText(QuizActivity.this, "Yay! you get 10 EXP.", Toast.LENGTH_SHORT).show();
         } else {
             showAnswer();
             textView.setBackground(getResources().getDrawable(R.drawable.option_wrong));
+            Toast.makeText(QuizActivity.this, "You can do it better next time.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -182,10 +242,44 @@ public class QuizActivity extends AppCompatActivity {
                     Intent intent = new Intent(QuizActivity.this, ResultActivity.class);
                     intent.putExtra("correct", correctAnswers);
                     intent.putExtra("total", questions.size());
+                    intent.putExtra("exp", totalExp);
                     startActivity(intent);
-                    //Toast.makeText(this, "Quiz Finished.", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
+    }
+
+    void fifty_fifty() {
+        questionObj = questions.get(index);
+        if (questionObj.getAnswer().equals(option4.getText().toString())) {
+            option1.setVisibility(View.INVISIBLE);
+            option2.setVisibility(View.INVISIBLE);
+            option3.setVisibility(View.VISIBLE);
+        }
+
+        if (questionObj.getAnswer().equals(option3.getText().toString())) {
+            option1.setVisibility(View.INVISIBLE);
+            option4.setVisibility(View.INVISIBLE);
+            option2.setVisibility(View.VISIBLE);
+        }
+
+        if (questionObj.getAnswer().equals(option2.getText().toString())) {
+            option3.setVisibility(View.INVISIBLE);
+            option4.setVisibility(View.INVISIBLE);
+            option1.setVisibility(View.VISIBLE);
+        }
+
+        if (questionObj.getAnswer().equals(option1.getText().toString())) {
+            option3.setVisibility(View.INVISIBLE);
+            option2.setVisibility(View.INVISIBLE);
+            option4.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void displayButtons() {
+        option1.setVisibility(View.VISIBLE);
+        option2.setVisibility(View.VISIBLE);
+        option3.setVisibility(View.VISIBLE);
+        option4.setVisibility(View.VISIBLE);
     }
 }

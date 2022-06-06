@@ -131,7 +131,7 @@ public class LeaderboardActivity extends AppCompatActivity implements Navigation
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut(); //logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
-                finish();
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

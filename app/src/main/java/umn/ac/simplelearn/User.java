@@ -2,18 +2,20 @@ package umn.ac.simplelearn;
 
 public class User {
 
-    private String email, namaMahasiswa, nim, pass, profile;
+    private String email, namaMahasiswa, nim, pass, profile, level;
     private long coins = 25;
+    private long exp = 0;
 
     public User() {
     }
 
-    public User(String email, String namaMahasiswa, String pass, String nim, String profile) {
+    public User(String email, String namaMahasiswa, String pass, String nim, String profile, String level) {
         this.email = email;
         this.namaMahasiswa = namaMahasiswa;
         this.pass = pass;
         this.nim = nim;
         this.profile = profile;
+        this.level = level;
     }
 
     public String getEmail() {
@@ -46,6 +48,22 @@ public class User {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public long getExp() {
+        return exp;
+    }
+
+    public void setExp(long exp) {
+        this.exp = exp;
     }
 
     public long getCoins() {

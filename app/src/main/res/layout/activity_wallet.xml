@@ -98,13 +98,43 @@
                 app:layout_constraintStart_toStartOf="@+id/currentCoins"
                 app:layout_constraintTop_toBottomOf="@+id/currentCoins" />
 
-            <androidx.recyclerview.widget.RecyclerView
+            <EditText
+                android:id="@+id/gopayEmail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="48dp"
+                android:background="@drawable/textbox"
+                android:drawableLeft="@drawable/gopay_mini"
+                android:drawablePadding="10dp"
+                android:ems="10"
+                android:hint="Go-Pay Email Address"
+                android:inputType="textPersonName"
+                android:padding="15dp"
                 app:layout_constraintEnd_toEndOf="@+id/view"
                 app:layout_constraintStart_toStartOf="@+id/view"
                 app:layout_constraintTop_toBottomOf="@+id/view" />
+
+            <Button
+                android:id="@+id/sendRequest"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/button2"
+                android:fontFamily="@font/roboto_bold"
+                android:text="SEND REQUEST"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@+id/gopayEmail"
+                app:layout_constraintStart_toStartOf="@+id/gopayEmail"
+                app:layout_constraintTop_toBottomOf="@+id/gopayEmail" />
+
+            <ImageView
+                android:id="@+id/imageView8"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/sendRequest"
+                app:layout_constraintStart_toStartOf="@+id/sendRequest"
+                app:srcCompat="@drawable/online_presentation_monochromatic" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

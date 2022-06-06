@@ -64,7 +64,7 @@ public class Register extends AppCompatActivity {
                 String confirmPassword = mConfirmPassword.getText().toString().trim();
                 String fullName = mFullName.getText().toString();
 
-                final User user = new User(email, fullName, newPass, nim, "user");
+                final User user = new User(email, fullName, newPass, nim, "user", "Mahasiswa");
 
                 if (TextUtils.isEmpty(email)){
                     mEmail.setError("Email is Required.");

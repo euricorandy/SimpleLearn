@@ -44,10 +44,10 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
     Toolbar toolbar;
 
     private static final int GALLERY_INTENT_CODE = 1023;
-    TextView fullName, email, nim;
+    TextView fullName, email, nim, level, exp;
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
-    String userId;
+    String userId, levelProfile;
     Button updateProfile;
     ImageView profilePicture;
     StorageReference storageReference;
@@ -64,6 +64,8 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
         fullName = findViewById(R.id.fullNameProfile);
         email = findViewById(R.id.emailProfile);
         nim = findViewById(R.id.nimProfile);
+        level = findViewById(R.id.statusLevel);
+        exp = findViewById(R.id.expLabel);
 
         profilePicture = findViewById(R.id.profilePicture);
         updateProfile = findViewById(R.id.updateProfile);
@@ -89,7 +91,18 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
                 nim.setText(documentSnapshot.getString("nim"));
                 fullName.setText(documentSnapshot.getString("namaMahasiswa"));
                 email.setText(documentSnapshot.getString("email"));
-
+                exp.setText(documentSnapshot.getString("exp"));
+                String expValue = documentSnapshot.getString("exp");
+                int expNum = Integer.valueOf(expValue);
+                if (expNum < 500) {
+                    levelProfile = "Mahasiswa";
+                }
+                else if (expNum >= 500 && expNum < 1000) {
+                    levelProfile = "Ketua Kelas";
+                } else if (expNum >= 1000) {
+                    levelProfile = "Sarjana";
+                }
+                level.setText(levelProfile);
             }
         });
 
@@ -171,7 +184,7 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut(); //logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
-                finish();
+                break;
         }
 
         drawerLayout2.closeDrawer(GravityCompat.START);

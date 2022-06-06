@@ -24,6 +24,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -37,6 +39,9 @@ public class MenuQuiz extends AppCompatActivity implements NavigationView.OnNavi
 
     RecyclerView recyclerView;
     FirebaseFirestore database;
+    FirebaseAuth firebaseAuth;
+
+    ListenerRegistration registration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +51,13 @@ public class MenuQuiz extends AppCompatActivity implements NavigationView.OnNavi
         recyclerView = (RecyclerView) findViewById(R.id.categoryList);
 
         database = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         ArrayList<CategoryModel> categories = new ArrayList<>();
 
         CategoryAdapter adapter = new CategoryAdapter(this, categories);
 
-        database.collection("categories")
+        registration = database.collection("categories")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -74,7 +80,7 @@ public class MenuQuiz extends AppCompatActivity implements NavigationView.OnNavi
         setSupportActionBar(toolbar);
 
         Menu menu = navigationView.getMenu();
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if(firebaseAuth.getCurrentUser() != null) {
 
             menu.findItem(R.id.login).setVisible(false);
 
@@ -132,9 +138,10 @@ public class MenuQuiz extends AppCompatActivity implements NavigationView.OnNavi
                 finish();
 
             case R.id.logout:
-                FirebaseAuth.getInstance().signOut(); //logout
+                registration.remove();
+                firebaseAuth.signOut(); //logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
-                finish();
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

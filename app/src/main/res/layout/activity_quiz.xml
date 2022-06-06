@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/timer" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/fifty"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -39,14 +39,14 @@
         app:srcCompat="@drawable/fifty" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/clock"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         app:layout_constraintBottom_toBottomOf="@+id/view3"
         app:layout_constraintEnd_toEndOf="@+id/view3"
         app:layout_constraintTop_toBottomOf="@+id/view3"
-        app:srcCompat="@drawable/askpeople" />
+        app:srcCompat="@drawable/clock" />
 
     <TextView
         android:id="@+id/timer"
@@ -106,7 +106,7 @@
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/view3"
         app:layout_constraintStart_toStartOf="@+id/view3"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        app:layout_constraintTop_toBottomOf="@+id/fifty" />
 
     <TextView
         android:id="@+id/option_2"

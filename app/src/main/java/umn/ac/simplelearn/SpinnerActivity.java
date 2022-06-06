@@ -26,8 +26,7 @@ import java.util.Random;
 public class SpinnerActivity extends AppCompatActivity {
 
     ActivitySpinnerBinding binding;
-    boolean showedToday = false;
-    boolean counter = false;
+    boolean showedToday = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +48,10 @@ public class SpinnerActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean(todayString, true);
             editor.apply();
-            counter = true;
+            showedToday = true;
         } else {
             Toast.makeText(this, "Reward received today!", Toast.LENGTH_SHORT).show();
-            counter = false;
+            showedToday = false;
         }
 
         List<LuckyItem> data = new ArrayList<>();
@@ -116,26 +115,27 @@ public class SpinnerActivity extends AppCompatActivity {
         binding.wheelview.setData(data);
         binding.wheelview.setRound(5);
 
-        if (counter == true){
-            binding.spinBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        binding.spinBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (showedToday == true) {
                     Random r = new Random();
                     int randomNumber = r.nextInt(8);
 
                     binding.wheelview.startLuckyWheelWithTargetIndex(randomNumber);
+                    showedToday = false;
+                } else {
+                    Toast.makeText(SpinnerActivity.this, "You've already spin the wheel for today", Toast.LENGTH_SHORT).show();
                 }
-            });
+            }
+        });
 
-            binding.wheelview.setLuckyRoundItemSelectedListener(new LuckyWheelView.LuckyRoundItemSelectedListener() {
-                @Override
-                public void LuckyRoundItemSelected(int index) {
-                    updateCash(index);
-                }
-            });
-        } else {
-            Toast.makeText(this, "You've already spin the wheel for today", Toast.LENGTH_SHORT).show();
-        }
+        binding.wheelview.setLuckyRoundItemSelectedListener(new LuckyWheelView.LuckyRoundItemSelectedListener() {
+            @Override
+            public void LuckyRoundItemSelected(int index) {
+                updateCash(index);
+            }
+        });
     }
 
     void updateCash(int index) {

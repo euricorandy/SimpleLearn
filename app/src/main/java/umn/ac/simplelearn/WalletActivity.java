@@ -11,7 +11,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
@@ -28,6 +32,9 @@ public class WalletActivity extends AppCompatActivity implements NavigationView.
     FirebaseFirestore database;
 
     TextView coins;
+    EditText emailGopay;
+    Button sendRequest;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +46,8 @@ public class WalletActivity extends AppCompatActivity implements NavigationView.
         toolbar = findViewById(R.id.walletToolbar);
 
         coins = findViewById(R.id.currentCoins);
+        emailGopay = findViewById(R.id.gopayEmail);
+        sendRequest = findViewById(R.id.sendRequest);
 
         setSupportActionBar(toolbar);
 
@@ -47,8 +56,31 @@ public class WalletActivity extends AppCompatActivity implements NavigationView.
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
+                user = documentSnapshot.toObject(User.class);
                 coins.setText(String.valueOf(user.getCoins()));
+            }
+        });
+
+        sendRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (user.getCoins() > 50000) {
+                    String uid = FirebaseAuth.getInstance().getUid();
+                    String gopay = emailGopay.getText().toString();
+                    if (gopay == user.getEmail()) {
+                        WithdrawRequest request = new WithdrawRequest(uid, gopay, user.getNamaMahasiswa());
+                        database.collection("withdraws").document(uid).set(request).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(WalletActivity.this, "Request sent successfully.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(WalletActivity.this, "Enter the same email as the one in the profile.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(WalletActivity.this, "You need more coins to get withdraw.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -113,7 +145,7 @@ public class WalletActivity extends AppCompatActivity implements NavigationView.
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut(); //logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
-                finish();
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

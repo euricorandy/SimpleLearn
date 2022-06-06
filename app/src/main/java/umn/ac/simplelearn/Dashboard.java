@@ -7,16 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -27,6 +24,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
+
+    FirebaseAuth fAuth;
 
     ImageView indoMenu, ingMenu, quizMenu, spinMenu;
 
@@ -44,6 +43,8 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         quizMenu = findViewById(R.id.funQuiz);
         spinMenu = findViewById(R.id.spinWheel);
 
+        fAuth = FirebaseAuth.getInstance();
+
         // toolbar
         setSupportActionBar(toolbar);
 
@@ -51,7 +52,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
 
         // hide and show logout and profile
         Menu menu = navigationView.getMenu();
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if(fAuth.getCurrentUser() != null) {
 
             menu.findItem(R.id.login).setVisible(false);
             indoMenu.setOnClickListener(new View.OnClickListener() {
@@ -162,9 +163,9 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 finish();
 
             case R.id.logout:
-                FirebaseAuth.getInstance().signOut(); //logout
+                fAuth.signOut(); //logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
-                finish();
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

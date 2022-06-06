@@ -10,30 +10,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -41,10 +29,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +49,10 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
     Toolbar toolbar;
 
     Button addIndo;
+    String status;
+
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +67,10 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
         navigationView = findViewById(R.id.navigationView);
         setSupportActionBar(toolbar);
 
+        fAuth = FirebaseAuth.getInstance();
+
         Menu menu = navigationView.getMenu();
-        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if(fAuth.getCurrentUser() != null) {
 
             menu.findItem(R.id.login).setVisible(false);
 
@@ -86,6 +81,22 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
             menu.findItem(R.id.rank_menu).setVisible(false);
             menu.findItem(R.id.profile_menu).setVisible(false);
 
+        }
+
+        fStore = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = fStore.collection("users")
+                .document(fAuth.getUid());
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                status = documentSnapshot.getString("profile");
+            }
+        });
+
+        if (status == "admin") {
+            addIndo.setVisibility(View.VISIBLE);
+        } else {
+            addIndo.setVisibility(View.GONE);
         }
 
         navigationView.bringToFront();
@@ -184,9 +195,9 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
                 finish();
 
             case R.id.logout:
-                FirebaseAuth.getInstance().signOut(); //logout
+                fAuth.signOut(); //logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
-                finish();
+                break;
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
