@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,9 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -51,9 +54,6 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
     Button addIndo;
     String status;
 
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +66,9 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
         drawerLayout = findViewById(R.id.indonesiaDL);
         navigationView = findViewById(R.id.navigationView);
         setSupportActionBar(toolbar);
+
+        FirebaseAuth fAuth;
+        FirebaseFirestore fStore;
 
         fAuth = FirebaseAuth.getInstance();
 
@@ -90,14 +93,14 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 status = documentSnapshot.getString("profile");
+                Log.i("LOGGER", "STATUS = " + status);
+                if (status.equals("admin")) {
+                    addIndo.setVisibility(View.VISIBLE);
+                } else {
+                    addIndo.setVisibility(View.GONE);
+                }
             }
         });
-
-        if (status == "admin") {
-            addIndo.setVisibility(View.VISIBLE);
-        } else {
-            addIndo.setVisibility(View.GONE);
-        }
 
         navigationView.bringToFront();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_open,R.string.navigation_close);
@@ -195,7 +198,7 @@ public class Indonesia extends AppCompatActivity implements NavigationView.OnNav
                 finish();
 
             case R.id.logout:
-                fAuth.signOut(); //logout
+                FirebaseAuth.getInstance().signOut(); //logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
                 break;
         }

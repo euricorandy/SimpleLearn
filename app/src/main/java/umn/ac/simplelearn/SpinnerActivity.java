@@ -125,7 +125,8 @@ public class SpinnerActivity extends AppCompatActivity {
                     binding.wheelview.startLuckyWheelWithTargetIndex(randomNumber);
                     showedToday = false;
                 } else {
-                    Toast.makeText(SpinnerActivity.this, "You've already spin the wheel for today", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SpinnerActivity.this,
+                            "You've already spin the wheel for today", Toast.LENGTH_SHORT).show();
                 }
             }
         });

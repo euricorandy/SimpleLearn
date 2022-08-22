@@ -48,6 +48,7 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
     String userId, levelProfile;
+    User user;
     Button updateProfile;
     ImageView profilePicture;
     StorageReference storageReference;
@@ -85,15 +86,15 @@ public class Profile extends AppCompatActivity implements NavigationView.OnNavig
         userId = fAuth.getCurrentUser().getUid();
 
         DocumentReference documentReference = fStore.collection("users").document(userId);
-        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                user = documentSnapshot.toObject(User.class);
                 nim.setText(documentSnapshot.getString("nim"));
                 fullName.setText(documentSnapshot.getString("namaMahasiswa"));
                 email.setText(documentSnapshot.getString("email"));
-                exp.setText(documentSnapshot.getString("exp"));
-                String expValue = documentSnapshot.getString("exp");
-                int expNum = Integer.valueOf(expValue);
+                exp.setText(String.valueOf(user.getExp()));
+                long expNum = user.getExp();
                 if (expNum < 500) {
                     levelProfile = "Mahasiswa";
                 }

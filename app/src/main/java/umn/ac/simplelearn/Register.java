@@ -77,12 +77,12 @@ public class Register extends AppCompatActivity {
                 }
 
                 if (TextUtils.isEmpty(fullName)){
-                    mEmail.setError("Name is Required.");
+                    mFullName.setError("Name is Required.");
                     return;
                 }
 
                 if (TextUtils.isEmpty(nim)){
-                    mEmail.setError("NIM is Required.");
+                    mNIM.setError("NIM is Required.");
                     return;
                 }
 

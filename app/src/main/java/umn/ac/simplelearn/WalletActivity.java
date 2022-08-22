@@ -29,8 +29,6 @@ public class WalletActivity extends AppCompatActivity implements NavigationView.
     NavigationView navigationView;
     Toolbar toolbar;
 
-    FirebaseFirestore database;
-
     TextView coins;
     EditText emailGopay;
     Button sendRequest;
@@ -51,6 +49,8 @@ public class WalletActivity extends AppCompatActivity implements NavigationView.
 
         setSupportActionBar(toolbar);
 
+        FirebaseFirestore database;
+
         database = FirebaseFirestore.getInstance();
         database.collection("users").document(FirebaseAuth.getInstance().getUid())
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -66,18 +66,24 @@ public class WalletActivity extends AppCompatActivity implements NavigationView.
             public void onClick(View view) {
                 if (user.getCoins() > 50000) {
                     String uid = FirebaseAuth.getInstance().getUid();
-                    String gopay = emailGopay.getText().toString();
-                    if (gopay == user.getEmail()) {
-                        WithdrawRequest request = new WithdrawRequest(uid, gopay, user.getNamaMahasiswa());
-                        database.collection("withdraws").document(uid).set(request).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(WalletActivity.this, "Request sent successfully.", Toast.LENGTH_SHORT).show();
+                    database.collection("users").document(uid).get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            String gopay = emailGopay.getText().toString();
+                            if (gopay.equals(documentSnapshot.getString("email"))) {
+                                WithdrawRequest request = new WithdrawRequest(uid, gopay, user.getNamaMahasiswa());
+                                database.collection("withdraws").document(uid).set(request).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(WalletActivity.this, "Request sent successfully.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(WalletActivity.this, "Enter the same email as the one in the profile.", Toast.LENGTH_SHORT).show();
                             }
-                        });
-                    } else {
-                        Toast.makeText(WalletActivity.this, "Enter the same email as the one in the profile.", Toast.LENGTH_SHORT).show();
-                    }
+                        }
+                    });
                 } else {
                     Toast.makeText(WalletActivity.this, "You need more coins to get withdraw.", Toast.LENGTH_SHORT).show();
                 }

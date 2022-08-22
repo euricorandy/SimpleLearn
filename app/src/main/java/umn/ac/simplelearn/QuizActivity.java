@@ -43,7 +43,7 @@ public class QuizActivity extends AppCompatActivity {
     boolean counterF = true;
     boolean counterT = true;
     int exp = 10;
-    int totalExp;
+    int totalExp = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,26 +64,6 @@ public class QuizActivity extends AppCompatActivity {
 
         questions = new ArrayList<>();
         database = FirebaseFirestore.getInstance();
-
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        String todayString = year + "" + month + "" + day;
-
-        SharedPreferences preferences = getSharedPreferences("PREFS", 0);
-        boolean currentDay = preferences.getBoolean(todayString, false);
-
-        if (!currentDay) {
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(todayString, true);
-            editor.apply();
-            counterF = true;
-            counterT = true;
-        } else {
-            counterF = false;
-            counterT = false;
-        }
 
         final String categoryId = getIntent().getStringExtra("categoryId");
         Random random = new Random();
@@ -128,7 +108,7 @@ public class QuizActivity extends AppCompatActivity {
                     fifty_fifty();
                     counterF = false;
                 } else {
-                    Toast.makeText(QuizActivity.this, "Only can be used once per day", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(QuizActivity.this, "Once per quiz", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -140,7 +120,7 @@ public class QuizActivity extends AppCompatActivity {
                     countDownTimer.cancel();
                     counterT = false;
                 } else {
-                    Toast.makeText(QuizActivity.this, "Only can be used once per day", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(QuizActivity.this, "Once per quiz", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -166,6 +146,7 @@ public class QuizActivity extends AppCompatActivity {
                     Intent intent = new Intent(QuizActivity.this, ResultActivity.class);
                     intent.putExtra("correct", correctAnswers);
                     intent.putExtra("total", questions.size());
+                    intent.putExtra("exp", totalExp);
                     startActivity(intent);
                 }
             }
@@ -210,7 +191,7 @@ public class QuizActivity extends AppCompatActivity {
         } else {
             showAnswer();
             textView.setBackground(getResources().getDrawable(R.drawable.option_wrong));
-            Toast.makeText(QuizActivity.this, "You can do it better next time.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(QuizActivity.this, "Don't mind...", Toast.LENGTH_SHORT).show();
         }
     }
 

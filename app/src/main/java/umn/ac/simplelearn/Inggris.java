@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,9 +52,6 @@ public class Inggris extends AppCompatActivity implements NavigationView.OnNavig
     Button addIng;
     String status;
 
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +64,9 @@ public class Inggris extends AppCompatActivity implements NavigationView.OnNavig
         drawerLayout = findViewById(R.id.inggrisDL);
         navigationView = findViewById(R.id.navigationView);
         setSupportActionBar(toolbar);
+
+        FirebaseAuth fAuth;
+        FirebaseFirestore fStore;
 
         fAuth = FirebaseAuth.getInstance();
 
@@ -90,14 +91,14 @@ public class Inggris extends AppCompatActivity implements NavigationView.OnNavig
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 status = documentSnapshot.getString("profile");
+                Log.i("LOGGER", "STATUS = " + status);
+                if (status.equals("admin")) {
+                    addIng.setVisibility(View.VISIBLE);
+                } else {
+                    addIng.setVisibility(View.GONE);
+                }
             }
         });
-
-        if (status == "admin") {
-            addIng.setVisibility(View.VISIBLE);
-        } else {
-            addIng.setVisibility(View.GONE);
-        }
 
         navigationView.bringToFront();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.navigation_open,R.string.navigation_close);
@@ -195,7 +196,7 @@ public class Inggris extends AppCompatActivity implements NavigationView.OnNavig
                 finish();
 
             case R.id.logout:
-                fAuth.signOut(); //logout
+                FirebaseAuth.getInstance().signOut(); //logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
                 break;
         }

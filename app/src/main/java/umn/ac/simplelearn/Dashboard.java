@@ -25,8 +25,6 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
     NavigationView navigationView;
     Toolbar toolbar;
 
-    FirebaseAuth fAuth;
-
     ImageView indoMenu, ingMenu, quizMenu, spinMenu;
 
     @Override
@@ -43,6 +41,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
         quizMenu = findViewById(R.id.funQuiz);
         spinMenu = findViewById(R.id.spinWheel);
 
+        FirebaseAuth fAuth;
         fAuth = FirebaseAuth.getInstance();
 
         // toolbar
@@ -163,7 +162,7 @@ public class Dashboard extends AppCompatActivity implements NavigationView.OnNav
                 finish();
 
             case R.id.logout:
-                fAuth.signOut(); //logout
+                FirebaseAuth.getInstance().signOut(); //logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
                 break;
         }

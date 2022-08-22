@@ -38,8 +38,6 @@ public class MenuQuiz extends AppCompatActivity implements NavigationView.OnNavi
     Toolbar toolbar;
 
     RecyclerView recyclerView;
-    FirebaseFirestore database;
-    FirebaseAuth firebaseAuth;
 
     ListenerRegistration registration;
 
@@ -49,6 +47,9 @@ public class MenuQuiz extends AppCompatActivity implements NavigationView.OnNavi
         setContentView(R.layout.activity_menu_quiz);
 
         recyclerView = (RecyclerView) findViewById(R.id.categoryList);
+
+        FirebaseFirestore database;
+        FirebaseAuth firebaseAuth;
 
         database = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -139,7 +140,7 @@ public class MenuQuiz extends AppCompatActivity implements NavigationView.OnNavi
 
             case R.id.logout:
                 registration.remove();
-                firebaseAuth.signOut(); //logout
+                FirebaseAuth.getInstance().signOut(); //logout
                 startActivity(new Intent(getApplicationContext(), Login.class));
                 break;
         }
